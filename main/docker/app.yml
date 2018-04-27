@@ -1,0 +1,31 @@
+version: '2'
+services:
+    myawesomeapp-app:
+        image: myawesomeapp
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:sqlserver://myawesomeapp-mssql:1433;database=jhitest
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=myawesomeapp-elasticsearch:9300
+            - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka
+            - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=zookeeper
+        ports:
+            - 8080:8080
+    myawesomeapp-mssql:
+        extends:
+            file: mssql.yml
+            service: myawesomeapp-mssql
+    myawesomeapp-elasticsearch:
+        extends:
+            file: elasticsearch.yml
+            service: myawesomeapp-elasticsearch
+    kafka:
+        extends:
+            file: kafka.yml
+            service: kafka
+        environment:
+            - KAFKA_ADVERTISED_HOST_NAME=kafka
+    zookeeper:
+        extends:
+            file: kafka.yml
+            service: zookeeper
